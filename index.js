@@ -40,7 +40,7 @@ function handleURL(hostname, pathname, search) {
 			result = result || { hostname: DEFAULTURL };
 			result.search = mergeParams(search, result.search || "");
 			result.protocol = PROTOCOL;
-			return url.format(result);
+			return result;
 		});
 }
 
@@ -48,7 +48,7 @@ var server = http.createServer(function(req, res) {
 	var url_parts = url.parse(req.url);
 	var out = handleURL(url_parts.hostname, url_parts.pathname, url_parts.search);
 	res.writeHead(301, {
-		"Location": out
+		"Location": url.format(result)
 	});
 	res.end();
 }).listen(PORT);
