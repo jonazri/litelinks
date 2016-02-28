@@ -8,10 +8,16 @@ const PORT = process.env.PORT || 5000;
 const MONGODBURI = process.env.MONGOLAB_URI || "mongodb://heroku_761b3pmd:q6r73gmqgklehem4hco9p1haiv@ds019058.mlab.com:19058/heroku_761b3pmd";
 const DEFAULTURL = process.env.DEFAULT_REDIRECT_URL || "www.jewelry.com";
 const PROTOCOL = process.env.LANDING_PROTOCOL || "http:";
+const IGNOREURLS = process.env.IGNORE_URLS || ["/favicon.ico", "robots.txt"];
 
 mongoose.connect(MONGODBURI);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'db connection error:'));
+
+console.log("\n\n\n------NEW INSTANCE LAUNCHED------\n\n\n");
+db.once("open", function() {
+	console.log(`Connected to MongoDB at ${MONGODBURI}.`);
+});
 
 var linkSchema = new mongoose.Schema({
 	requestURL: String,
@@ -34,34 +40,28 @@ function mergeParams(userParams, dbParams) {
 }
 
 function handleURL(hostname, pathname, search, res) {
-	Link.findOne({ requestURL: hostname + pathname })
+	Link.findOne({ "requestURL": hostname + pathname })
 		.select('dest').lean()
 		.exec(function(err, doc) {
 			if (err) throw err;
-			console.log(util.inspect(doc,false,null));
-			result = doc || {};
+			result = doc ? doc.dest : { hostname: DEFAULTURL };
 			result.search = mergeParams(search, result.search || "");
 			result.protocol = PROTOCOL;
-			console.log(util.inspect(result,false,null));
-			// var urlOut = {
-// 				protocol: result.protocol,
-// 				hostname: result.hostname || DEFAULTURL,
-// 				pathname: result.pathname || "",
-// 				search: result.search || "",
-// 				hash: result.hash || ""
-// 			};
-			// console.log(url.format(urlOut));
-			res.end(url.format(result));
+			
+			res.writeHead(200, {"Content-Type": "text/plain"});
+			res.end(`301 would go to ${url.format(result)}.`);
 		});
 }
 
 var server = http.createServer(function(req, res) {
-	var url_parts = url.parse(req.url);
-	handleURL(url_parts.hostname, url_parts.pathname, url_parts.search, res);
-	
-	// res.writeHead(301, {
-// 		"Location": out
-// 	});
 
-	// res.end("ok");
+	if (IGNOREURLS.indexOf(req.url) > -1) {
+		res.writeHead(404, {"Content-Type": "text/plain"});
+		res.end();
+	} else {
+		console.log("\n\n------NEW REQUEST MADE------\n\n");
+		var url_parts = url.parse("http://" + req.headers.host + req.url);
+		console.log("Parts %j", url_parts);
+		handleURL(url_parts.hostname, url_parts.pathname, url_parts.search, res);
+	}
 }).listen(PORT);

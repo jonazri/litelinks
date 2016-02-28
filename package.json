@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/jonazri/litelinks#readme",
   "dependencies": {
-    "http": "0.0.0",
     "mongoose": "^4.4.5",
     "query-string": "^3.0.1",
     "url": "^0.11.0"
