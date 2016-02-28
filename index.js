@@ -8,15 +8,14 @@ const PORT = process.env.PORT || 5000;
 const MONGODBURI = process.env.MONGOLAB_URI || "mongodb://heroku_761b3pmd:q6r73gmqgklehem4hco9p1haiv@ds019058.mlab.com:19058/heroku_761b3pmd";
 const DEFAULTURL = process.env.DEFAULT_REDIRECT_URL || "www.jewelry.com";
 const PROTOCOL = process.env.LANDING_PROTOCOL || "http:";
-const IGNOREURLS = process.env.IGNORE_URLS || ["/favicon.ico", "robots.txt"];
+const IGNOREURLS = process.env.IGNORE_URLS || ["/favicon.ico", "/robots.txt"];
 
 mongoose.connect(MONGODBURI);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'db connection error:'));
 
-console.log("\n\n\n------NEW INSTANCE LAUNCHED------\n\n\n");
 db.once("open", function() {
-	console.log(`Connected to MongoDB at ${MONGODBURI}.`);
+	console.log(`Connected to Mongo.`);
 });
 
 var linkSchema = new mongoose.Schema({
@@ -55,11 +54,11 @@ function handleURL(hostname, pathname, search, res) {
 
 var server = http.createServer(function(req, res) {
 
-	if (IGNOREURLS.indexOf(req.url) > -1) {
+	if (IGNOREURLS.indexOf(url.parse(req.url).pathname) > -1) {
 		res.writeHead(404, {"Content-Type": "text/plain"});
 		res.end();
 	} else {
-		console.log("\n\n------NEW REQUEST MADE------\n\n");
+		console.log("\n----NEW REQUEST----\n");
 		var url_parts = url.parse("http://" + req.headers.host + req.url);
 		console.log("Parts %j", url_parts);
 		handleURL(url_parts.hostname, url_parts.pathname, url_parts.search, res);
