@@ -4,7 +4,7 @@ var qs = require('query-string');
 var mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 5000;
-const MONGODBURI = process.env.MONGOLAB_URI;
+const MONGODBURI = process.env.MONGOLAB_URI || "mongodb://heroku_761b3pmd:q6r73gmqgklehem4hco9p1haiv@ds019058.mlab.com:19058/heroku_761b3pmd";
 const DEFAULTURL = process.env.DEFAULT_REDIRECT_URL || "www.jewelry.com";
 const PROTOCOL = process.env.LANDING_PROTOCOL || "http";
 
@@ -52,5 +52,5 @@ var server = http.createServer(function(req, res) {
 	// res.writeHead(301, {
 // 		"Location": out
 // 	});
-	res.end("hello");
+	res.end(out);
 }).listen(PORT);
