@@ -32,12 +32,6 @@ function mergeParams(userParams, dbParams) {
 	return qs.stringify(d);
 }
 
-function logMessage(obj) {
-	obj.forEach(function(val,name) {
-		console.log(val);
-	});
-}
-
 function handleURL(hostname, pathname, search) {
 	var out = Link.findOne({ requestURL: hostname + pathname })
 		.select('dest').lean()
@@ -46,7 +40,7 @@ function handleURL(hostname, pathname, search) {
 			result = result || { hostname: DEFAULTURL };
 			result.search = mergeParams(search, result.search || "");
 			result.protocol = PROTOCOL;
-			logMessage(result);
+			console.log("URL DEBUG:\n"+result.hostname+"\n"+result);
 			return result;
 		});
 		return url.format(out);
