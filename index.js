@@ -49,7 +49,7 @@ var server = http.createServer(function(req, res) {
 	var url_parts = url.parse(req.url);
 	var out = handleURL(url_parts.hostname, url_parts.pathname, url_parts.search);
 	res.writeHead(301, {
-		"Location": url.format(result)
+		"Location": url.format(out)
 	});
 	res.end();
 }).listen(PORT);
