@@ -6,7 +6,7 @@ var mongoose = require('mongoose');
 const PORT = process.env.PORT || 5000;
 const MONGODBURI = process.env.MONGOLAB_URI || "mongodb://heroku_761b3pmd:q6r73gmqgklehem4hco9p1haiv@ds019058.mlab.com:19058/heroku_761b3pmd";
 const DEFAULTURL = process.env.DEFAULT_REDIRECT_URL || "www.jewelry.com";
-const PROTOCOL = process.env.LANDING_PROTOCOL || "http";
+const PROTOCOL = process.env.LANDING_PROTOCOL || "http:";
 
 mongoose.connect(MONGODBURI);
 var db = mongoose.connection;
@@ -32,25 +32,33 @@ function mergeParams(userParams, dbParams) {
 	return qs.stringify(d);
 }
 
-function handleURL(hostname, pathname, search) {
-	var out = Link.findOne({ requestURL: hostname + pathname })
+function handleURL(hostname, pathname, search, res) {
+	Link.findOne({ requestURL: hostname + pathname })
 		.select('dest').lean()
 		.exec(function(err, result) {
 			if (err) throw err;
-			result = result || { hostname: DEFAULTURL };
+			result = result || {};
 			result.search = mergeParams(search, result.search || "");
 			result.protocol = PROTOCOL;
-			console.log("URL DEBUG:\n"+result.hostname+"\n"+result);
-			return result;
+			var urlOut = {
+				protocol: result.protocol,
+				hostname: result.hostname || DEFAULTURL,
+				pathname: result.pathname || "",
+				search: result.search || "",
+				hash: result.hash || ""
+			};
+			// console.log(url.format(urlOut));
+			res.end(url.format(urlOut));
 		});
-		return url.format(out);
 }
 
 var server = http.createServer(function(req, res) {
 	var url_parts = url.parse(req.url);
-	var out = handleURL(url_parts.hostname, url_parts.pathname, url_parts.search);
+	handleURL(url_parts.hostname, url_parts.pathname, url_parts.search, res);
+	
 	// res.writeHead(301, {
 // 		"Location": out
 // 	});
-	res.end(out);
+
+	// res.end("ok");
 }).listen(PORT);
