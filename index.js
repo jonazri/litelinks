@@ -36,10 +36,10 @@ function mergeParams(userParams, dbParams) {
 function handleURL(hostname, pathname, search, res) {
 	Link.findOne({ requestURL: hostname + pathname })
 		.select('dest').lean()
-		.exec(function(err, result) {
+		.exec(function(err, doc) {
 			if (err) throw err;
-			console.log(util.inspect(result,false,null));
-			result = result || {};
+			console.log(util.inspect(doc,false,null));
+			result = doc || {};
 			result.search = mergeParams(search, result.search || "");
 			result.protocol = PROTOCOL;
 			console.log(util.inspect(result,false,null));
@@ -51,7 +51,7 @@ function handleURL(hostname, pathname, search, res) {
 // 				hash: result.hash || ""
 // 			};
 			// console.log(url.format(urlOut));
-			res.end("bye");
+			res.end(url.format(result));
 		});
 }
 
