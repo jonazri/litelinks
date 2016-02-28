@@ -40,6 +40,7 @@ function handleURL(hostname, pathname, search) {
 			result = result || { hostname: DEFAULTURL };
 			result.search = mergeParams(search, result.search || "");
 			result.protocol = PROTOCOL;
+			console.log(JSON.strigify(result));
 			return result;
 		});
 }
