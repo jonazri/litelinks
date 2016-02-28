@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var util = require('util');
 
 const PORT = process.env.PORT || 5000;
-const MONGODBURI = process.env.MONGOLAB_URI || "mongodb://heroku_761b3pmd:q6r73gmqgklehem4hco9p1haiv@ds019058.mlab.com:19058/heroku_761b3pmd";
+const MONGODBURI = process.env.MONGOLAB_URI;
 const DEFAULTURL = process.env.DEFAULT_REDIRECT_URL || "www.jewelry.com";
 const PROTOCOL = process.env.LANDING_PROTOCOL || "http:";
 const IGNOREURLS = process.env.IGNORE_URLS || ["/favicon.ico", "/robots.txt"];
@@ -47,8 +47,8 @@ function handleURL(hostname, pathname, search, res) {
 			result.search = mergeParams(search, result.search || "");
 			result.protocol = PROTOCOL;
 			
-			res.writeHead(200, {"Content-Type": "text/plain"});
-			res.end(`301 would go to ${url.format(result)}.`);
+			res.writeHead(301, {"Location": url.format(result)});
+			res.end();
 		});
 }
 
@@ -56,11 +56,11 @@ var server = http.createServer(function(req, res) {
 
 	if (IGNOREURLS.indexOf(url.parse(req.url).pathname) > -1) {
 		res.writeHead(404, {"Content-Type": "text/plain"});
-		res.end();
+		res.end("404 Not Found");
 	} else {
-		console.log("\n----NEW REQUEST----\n");
+		// console.log("\n----NEW REQUEST----\n");
 		var url_parts = url.parse("http://" + req.headers.host + req.url);
-		console.log("Parts %j", url_parts);
+		// console.log("Request URL JSON: %j", url_parts);
 		handleURL(url_parts.hostname, url_parts.pathname, url_parts.search, res);
 	}
 }).listen(PORT);
