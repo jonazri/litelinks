@@ -2,6 +2,7 @@ var http = require("http");
 var url = require("url");
 var qs = require('query-string');
 var mongoose = require('mongoose');
+var util = require('util');
 
 const PORT = process.env.PORT || 5000;
 const MONGODBURI = process.env.MONGOLAB_URI || "mongodb://heroku_761b3pmd:q6r73gmqgklehem4hco9p1haiv@ds019058.mlab.com:19058/heroku_761b3pmd";
@@ -21,7 +22,7 @@ var linkSchema = new mongoose.Schema({
 		hash: String
 	}
 });
-var Link = mongoose.model('link', linkSchema);
+var Link = mongoose.model('Link', linkSchema);
 
 function mergeParams(userParams, dbParams) {
 	var u = qs.parse(userParams);
@@ -37,18 +38,20 @@ function handleURL(hostname, pathname, search, res) {
 		.select('dest').lean()
 		.exec(function(err, result) {
 			if (err) throw err;
+			console.log(util.inspect(result,false,null));
 			result = result || {};
 			result.search = mergeParams(search, result.search || "");
 			result.protocol = PROTOCOL;
-			var urlOut = {
-				protocol: result.protocol,
-				hostname: result.hostname || DEFAULTURL,
-				pathname: result.pathname || "",
-				search: result.search || "",
-				hash: result.hash || ""
-			};
+			console.log(util.inspect(result,false,null));
+			// var urlOut = {
+// 				protocol: result.protocol,
+// 				hostname: result.hostname || DEFAULTURL,
+// 				pathname: result.pathname || "",
+// 				search: result.search || "",
+// 				hash: result.hash || ""
+// 			};
 			// console.log(url.format(urlOut));
-			res.end(url.format(urlOut));
+			res.end("bye");
 		});
 }
 
