@@ -21,7 +21,7 @@ var linkSchema = new mongoose.Schema({
 		hash: String
 	}
 });
-var Link = mongoose.model('Link', linkSchema);
+var Link = mongoose.model('link', linkSchema);
 
 function mergeParams(userParams, dbParams) {
 	var u = qs.parse(userParams);
