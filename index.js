@@ -4,7 +4,7 @@ var qs = require('query-string');
 var mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 5000;
-const MONGODBURI = process.env.DATABASE_URL;
+const MONGODBURI = process.env.MONGOLAB_URI;
 const DEFAULTURL = process.env.DEFAULT_REDIRECT_URL || "www.jewelry.com";
 const PROTOCOL = process.env.LANDING_PROTOCOL || "http";
 
