@@ -33,7 +33,7 @@ function mergeParams(userParams, dbParams) {
 }
 
 function handleURL(hostname, pathname, search) {
-	return Link.findOne({ requestURL: hostname + pathname })
+	var out = Link.findOne({ requestURL: hostname + pathname })
 		.select('dest').lean()
 		.exec(function(err, result) {
 			if (err) throw err;
@@ -43,13 +43,14 @@ function handleURL(hostname, pathname, search) {
 			console.log(JSON.strigify(result));
 			return result;
 		});
+		return url.format(out);
 }
 
 var server = http.createServer(function(req, res) {
 	var url_parts = url.parse(req.url);
 	var out = handleURL(url_parts.hostname, url_parts.pathname, url_parts.search);
 	res.writeHead(301, {
-		"Location": url.format(out)
+		"Location": out
 	});
 	res.end();
 }).listen(PORT);
