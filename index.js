@@ -2,15 +2,14 @@ var http = require("http");
 var url = require("url");
 var qs = require('query-string');
 var mongoose = require('mongoose');
-var util = require('util');
 
 const PORT = process.env.PORT || 5000;
-const MONGODBURI = process.env.MONGOLAB_URI;
-const DEFAULTURL = process.env.DEFAULT_REDIRECT_URL || "www.jewelry.com";
+const DBURL = process.env.MONGOLAB_URI;
+const DEFAULTURL = process.env.DEFAULT_REDIRECT_URL;
 const PROTOCOL = process.env.LANDING_PROTOCOL || "http:";
-const IGNOREURLS = process.env.IGNORE_URLS || ["/favicon.ico", "/robots.txt"];
+const IGNOREURLS = process.env.IGNORE_URLS;
 
-mongoose.connect(MONGODBURI);
+mongoose.connect(DBURL);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'db connection error:'));
 
@@ -54,13 +53,12 @@ function handleURL(hostname, pathname, search, res) {
 
 var server = http.createServer(function(req, res) {
 
-	if (IGNOREURLS.indexOf(url.parse(req.url).pathname) > -1) {
+	if (IGNOREURLS.indexOf(url.parse(req.url).pathname) > -1 || req.method !== "GET") {
 		res.writeHead(404, {"Content-Type": "text/plain"});
 		res.end("404 Not Found");
 	} else {
-		// console.log("\n----NEW REQUEST----\n");
 		var url_parts = url.parse("http://" + req.headers.host + req.url);
-		// console.log("Request URL JSON: %j", url_parts);
 		handleURL(url_parts.hostname, url_parts.pathname, url_parts.search, res);
 	}
+	
 }).listen(PORT);

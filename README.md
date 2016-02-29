@@ -13,8 +13,37 @@ Install the Heroku Toolkit. Then, in your `bash` shell:
 ```bash
 heroku login
 git clone https://github.com/jonazri/litelinks.git
+npm install
 heroku create
 heroku addons:create mongolab
+heroku addons:create papertrail
 git push heroku master
 heroku ps:scale web=1
+```
+Once installed, the database of URL rewrites can be administered from the Heroku UI (or from the MongoDB CLI).
+
+### Database Schema
+Database records ("Documents") follow the following schema:
+```json
+{
+	requestURL: { type: String, unique: true, sparse: true },
+	dest: {
+		hostname: String,
+		pathname: String,
+		search: String,
+		hash: String
+	}
+}
+```
+For example,
+```json
+{
+    "requestURL": "c.jewelry.com/family",
+    "dest": {
+        "hostname": "www.jewelry.com",
+        "pathname": "/",
+        "search": "c=bhfaf&utm_source=BH+Friends+and+Family&utm_medium=Partners&utm_campaign=bhfaf",
+        "hash": ""
+    }
+}
 ```
