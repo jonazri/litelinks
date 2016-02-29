@@ -4,7 +4,7 @@ var qs = require('query-string');
 var mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 5000;
-const DBURL = process.env.MONGOLAB_URI;
+const DBURL = process.env.MONGOLAB_URI || "mongodb://heroku_761b3pmd:q6r73gmqgklehem4hco9p1haiv@ds019058.mlab.com:19058/heroku_761b3pmd";
 const DEFAULTURL = process.env.DEFAULT_REDIRECT_URL;
 const PROTOCOL = process.env.LANDING_PROTOCOL || "http:";
 
@@ -44,7 +44,6 @@ function handleURL(hostname, pathname, search, res) {
 			var out = doc ? doc.dest : { hostname: DEFAULTURL };
 			out.search = mergeParams(search, out.search || "");
 			out.protocol = PROTOCOL;
-			
 			res.writeHead(301, {"Location": url.format(out)});
 			res.end();
 		});
