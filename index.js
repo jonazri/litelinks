@@ -19,7 +19,7 @@ db.once("open", function() {
 });
 
 var linkSchema = new mongoose.Schema({
-	requestURL: String,
+	requestURL: { type: String, unique: true, sparse: true },
 	dest: {
 		hostname: String,
 		pathname: String,
