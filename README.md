@@ -24,7 +24,7 @@ Once installed, the database of URL rewrites can be administered from the Heroku
 
 ### Database Schema
 Database records ("Documents") follow the following schema:
-```json
+```javascript
 {
 	requestURL: { type: String, unique: true, sparse: true },
 	dest: {
@@ -36,7 +36,7 @@ Database records ("Documents") follow the following schema:
 }
 ```
 For example,
-```json
+```javascript
 {
     "requestURL": "c.jewelry.com/family",
     "dest": {
