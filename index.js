@@ -4,8 +4,8 @@ var qs = require('query-string');
 var mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 5000;
-const DBURL = process.env.MONGOLAB_URI || "mongodb://heroku_761b3pmd:q6r73gmqgklehem4hco9p1haiv@ds019058.mlab.com:19058/heroku_761b3pmd";
-const DEFAULTURL = process.env.DEFAULT_REDIRECT_URL;
+const DBURL = process.env.MONGOLAB_URI;
+const DEFAULTURL = process.env.DEFAULT_REDIRECT_URL || "www.google.com";
 const PROTOCOL = process.env.LANDING_PROTOCOL || "http:";
 
 mongoose.connect(DBURL);
