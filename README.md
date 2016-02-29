@@ -38,12 +38,12 @@ Database records ("Documents") follow the following schema:
 For example,
 ```javascript
 {
-    "requestURL": "c.jewelry.com/family",
+    "requestURL": "myshortlink.com/awesomepromo",
     "dest": {
-        "hostname": "www.jewelry.com",
-        "pathname": "/",
-        "search": "c=bhfaf&utm_source=BH+Friends+and+Family&utm_medium=Partners&utm_campaign=bhfaf",
-        "hash": ""
+        "hostname": "www.example.com",
+        "pathname": "/promo/page.html",
+        "search": "utm_source=promos&utm_medium=social&utm_campaign=Awesome+Promo",
+        "hash": "signup"
     }
 }
 ```
