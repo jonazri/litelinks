@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 5000;
 const DBURL = process.env.MONGOLAB_URI;
 const DEFAULTURL = process.env.DEFAULT_REDIRECT_URL;
 const PROTOCOL = process.env.LANDING_PROTOCOL || "http:";
-const IGNOREURLS = process.env.IGNORE_URLS.split(",") || [];
+const IGNOREURLS = process.env.IGNORE_URLS || [];
 
 mongoose.connect(DBURL);
 var db = mongoose.connection;
