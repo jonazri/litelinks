@@ -42,11 +42,11 @@ function handleURL(hostname, pathname, search, res) {
 		.select('dest').lean()
 		.exec(function(err, doc) {
 			if (err) throw err;
-			doc = doc ? doc.dest : { hostname: DEFAULTURL };
-			doc.search = mergeParams(search, doc.search || "");
-			doc.protocol = PROTOCOL;
+			var out = doc ? doc.dest : { hostname: DEFAULTURL };
+			out.search = mergeParams(search, out.search || "");
+			out.protocol = PROTOCOL;
 			
-			res.writeHead(301, {"Location": url.format(doc)});
+			res.writeHead(301, {"Location": url.format(out)});
 			res.end();
 		});
 }
