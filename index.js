@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 5000;
 const DBURL = process.env.MONGOLAB_URI;
 const DEFAULTURL = process.env.DEFAULT_REDIRECT_URL;
 const PROTOCOL = process.env.LANDING_PROTOCOL || "http:";
-const IGNOREURLS = process.env.IGNORE_URLS ? (process.env.IGNORE_URLS.indexOf(",") > -1) ? process.env.IGNORE_URLS.split(",") : [process.env.IGNORE_URLS] : [];
+const IGNOREURLS = process.env.IGNORE_URLS.split(",") || [];
 
 mongoose.connect(DBURL);
 var db = mongoose.connection;
@@ -53,7 +53,7 @@ function handleURL(hostname, pathname, search, res) {
 
 var server = http.createServer(function(req, res) {
 
-	if (IGNOREURLS.indexOf(url.parse(req.url).pathname) > -1 || req.method !== "GET") {
+	if (IGNOREURLS.indexOf(url.parse(req.url).pathname) > -1) {
 		res.writeHead(404, {"Content-Type": "text/plain"});
 		res.end("404 Not Found");
 	} else {
