@@ -7,8 +7,7 @@ var mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 5000;
 const DBURL = process.env.MONGOLAB_URI;
-const DEFAULTURL = process.env.DEFAULT_REDIRECT_URL || "www.google.com";
-const PROTOCOL = process.env.LANDING_PROTOCOL || "http:";
+const DEFAULTURL = process.env.DEFAULT_REDIRECT_URL || "http://www.google.com/";
 
 mongoose.connect(DBURL);
 var db = mongoose.connection;
@@ -32,7 +31,7 @@ function handleURL(hostname, pathname, search, res) {
 	Link.findOne({ "requestURL": hostname + pathname }).lean()
 		.exec(function(err, doc) {
 			if (err) throw err;
-			var out = doc ? url.parse(PROTOCOL + "//" + doc.destinationURL) : { "hostname": DEFAULTURL, "protocol": PROTOCOL };
+			var out = doc ? url.parse(doc.destinationURL) : url.parse(DEFAULTURL);
 			out.search = mergeParams(search, out.search || "");
 			res.writeHead(301, {"Location": url.format(out)});
 			res.end();
@@ -40,6 +39,6 @@ function handleURL(hostname, pathname, search, res) {
 }
 
 var server = http.createServer(function(req, res) {
-		var url_parts = url.parse(PROTOCOL + "//" + req.headers.host + req.url);
+		var url_parts = url.parse("http://" + req.headers.host + req.url);
 		handleURL(url_parts.hostname, url_parts.pathname, url_parts.search, res);
 }).listen(PORT);

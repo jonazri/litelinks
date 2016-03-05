@@ -34,7 +34,7 @@ For example,
 ```javascript
 {
     "requestURL": "myshortlink.com/awesomepromo",
-    "destinationURL": "www.example.com/promo/page.html?utm_source=promos&utm_medium=social&utm_campaign=Awesome+Promo#signup"
+    "destinationURL": "http://www.example.com/promo/page.html?utm_source=promos&utm_medium=social&utm_campaign=Awesome+Promo#signup"
 	
 }
 ```
