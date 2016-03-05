@@ -27,23 +27,14 @@ Database records ("Documents") follow the following schema:
 ```javascript
 {
 	requestURL: { type: String, unique: true, sparse: true },
-	dest: {
-		hostname: String,
-		pathname: String,
-		search: String,
-		hash: String
-	}
+	destinationURL: { type: String }
 }
 ```
 For example,
 ```javascript
 {
     "requestURL": "myshortlink.com/awesomepromo",
-    "dest": {
-        "hostname": "www.example.com",
-        "pathname": "/promo/page.html",
-        "search": "utm_source=promos&utm_medium=social&utm_campaign=Awesome+Promo",
-        "hash": "signup"
-    }
+    "destinationURL": "www.example.com/promo/page.html?utm_source=promos&utm_medium=social&utm_campaign=Awesome+Promo#signup"
+	
 }
 ```
